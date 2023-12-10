@@ -1,4 +1,4 @@
-const teachers = [
+var teachers = [
     {
         id: 1,
         name: 'John Doe',

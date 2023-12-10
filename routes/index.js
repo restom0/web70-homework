@@ -1,10 +1,10 @@
 const teacherRouter = require('./teacher.js')
 const userRouter = require('./user.js')
 const studentRouter = require('./student.js')
-const requireAPIKey = require('../middleware/requireAPIKey');
+const requireAPIKey = require('../middlewares/requireAPIKey.js');
 const teachers = require('../mock/teacher.js');
 const students = require('../mock/student.js');
-const { generateJwt, verifyJwt } = require('../middleware/verifyAuth.js');
+const { generateJwt, verifyJwt } = require('../middlewares/verifyAuth.js');
 function route(app) {
     app.post('/login', (req, res) => {
         const { name, age } = req.query;

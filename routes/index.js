@@ -1,13 +1,29 @@
 const teacherRouter = require('./teacher.js')
 const userRouter = require('./user.js')
-const requireAPIKey = require('../middleware/requireAPIKey')
+const studentRouter = require('./student.js')
+const requireAPIKey = require('../middleware/requireAPIKey');
+const teachers = require('../mock/teacher.js');
+const students = require('../mock/student.js');
+const { generateJwt, verifyJwt } = require('../middleware/verifyAuth.js');
 function route(app) {
-    app.use('/teachers', requireAPIKey);
-    app.use("/teachers", teacherRouter);
+    app.post('/login', (req, res) => {
+        const { name, age } = req.query;
+        const teacher = teachers.find(teacher => teacher.name === name && teacher.age === parseInt(age));
+        if (teacher) {
+            const token = generateJwt(teacher, 'teacher');
+            return res.send({ token });
+        }
+        const student = students.find(student => student.name === name && student.age === parseInt(age));
+        if (student) {
+            const token = generateJwt(student, 'student');
+            return res.send({ token });
+        }
+        return res.send({ error: 'Invalid credentials' });
+    });
+    app.use("/teachers", verifyJwt, teacherRouter);
+    app.use('/students', verifyJwt, studentRouter);
     app.use('/users', userRouter);
-    app.use('/', (req, res) => {
-        res.send('Hello, this is homepage')
-    })
+
 
 
 }
